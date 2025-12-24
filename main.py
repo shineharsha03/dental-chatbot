@@ -9,16 +9,20 @@ from openai import OpenAI
 st.set_page_config(page_title="Medical AI Suite", page_icon="🏥", layout="wide")
 
 # GET API KEY SAFELY
-api_key = os.environ.get("OPENAI_API_KEY")
-if not api_key:
-    try:
-        api_key = st.secrets["OPENAI_API_KEY"]
-        os.environ["OPENAI_API_KEY"] = api_key
-    except:
-        st.error(
-            "OpenAI API key not found. Please set OPENAI_API_KEY in secrets.")
-        st.stop()
+# --- API SETUP (Works on both Replit and Streamlit) ---
+import streamlit as st
+import os
 
+try:
+    # Try getting the key from Streamlit Secrets first
+    api_key = st.secrets["GOOGLE_API_KEY"]
+except:
+    # If that fails, look for Replit/Local environment variable
+    api_key = os.environ.get("GOOGLE_API_KEY")
+
+# Configure the model
+genai.configure(api_key=api_key)
+# -------------------------------------------------------
 # Initialize Vision Client
 client = OpenAI(api_key=api_key)
 
